@@ -33,3 +33,6 @@
 
 # Default build dir
 build/
+
+# VSCode
+.vscode/
