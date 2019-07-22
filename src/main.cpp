@@ -7,6 +7,7 @@
 #include "math/ray.hpp"
 #include "scene/world.hpp"
 #include "scene/sphere.hpp"
+#include "camera.hpp"
 
 math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world)
 {
@@ -29,8 +30,9 @@ inline int colorFloatToInt(floating color)
 
 int main()
 {
-    const int width = 400;
-    const int height = 200;
+    const int width = 200;
+    const int height = 100;
+    const int samples = 100;
 
     output::ImageOutput *imageOut = new output::PpmOutput;
 
@@ -39,26 +41,29 @@ int main()
         return 1;
     }
 
-    math::Vector3 lower_left(-2.0, -1.0, -1.0);
-    math::Vector3 horizontal(4.0, 0.0, 0.0);
-    math::Vector3 vertical(0.0, 2.0, 0.0);
-    math::Vector3 origin(0.0, 0.0, 0.0);
-
     scene::Hitable *list[2];
     list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5);
     list[1] = new scene::Sphere(math::Vector3(0, -100.5, -1), 100);
     scene::Hitable *world = new scene::World(list, 2);
 
+    Camera camera;
+
     for (int y = height - 1; y >= 0; y--)
     {
         for (int x = 0; x < width; x++)
         {
-            floating u = (floating)(x) / (floating)(width);
-            floating v = (floating)(y) / (floating)(height);
+            math::Vector3 color(0, 0, 0);
 
-            math::Ray ray(origin, lower_left + u * horizontal + v * vertical);
+            for (int sample = 0; sample < samples; sample++)
+            {
+                floating u = ((floating)(x) + drand48()) / (floating)(width);
+                floating v = ((floating)(y) + drand48()) / (floating)(height);
 
-            math::Vector3 color = traceColor(ray, world);
+                math::Ray ray = camera.getRay(u, v);
+                color += traceColor(ray, world);
+            }
+
+            color /= (floating) samples;
 
             int r = colorFloatToInt(color.r());
             int g = colorFloatToInt(color.g());
