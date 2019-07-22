@@ -18,6 +18,7 @@ namespace scene
                 rec.t = temp;
                 rec.point = ray.pointAt(rec.t);
                 rec.normal = (rec.point - center) / radius;
+                rec.matPtr = material;
                 return true;
             }
 
@@ -28,6 +29,7 @@ namespace scene
                 rec.t = temp;
                 rec.point = ray.pointAt(rec.t);
                 rec.normal = (rec.point - center) / radius;
+                rec.matPtr = material;
                 return true;
             }
         }

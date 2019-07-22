@@ -7,33 +7,33 @@
 #include "math/ray.hpp"
 #include "scene/world.hpp"
 #include "scene/sphere.hpp"
+#include "material/lambertian.hpp"
+#include "material/metal.hpp"
 #include "camera.hpp"
 
-// TODO move into math namespace
-math::Vector3 random_in_unit_sphere()
-{
-    math::Vector3 point;
-
-    do {
-        point = 2.0 * math::Vector3(drand48(), drand48(), drand48()) - math::Vector3(1, 1, 1);
-    } while (point.squared_length() >= 1.0);
-
-    return point;
-}
-
-math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world)
+math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world, int depth)
 {
     scene::HitRecord rec;
 
     if (world->hit(ray, 0.001, MAX_FLOATING, rec))
     {
-        math::Vector3 target = rec.point + rec.normal + random_in_unit_sphere();
-        return 0.5 * traceColor(math::Ray(rec.point, target - rec.point), world);
+        math::Ray scattered;
+        math::Vector3 attenuation;
+        if (depth < 50 && rec.matPtr->scatter(ray, rec, attenuation, scattered))
+        {
+            return attenuation * traceColor(scattered, world, depth + 1);
+        }
+        else
+        {
+            return math::Vector3(0, 0, 0);
+        }
     }
-
-    math::Vector3 unit_dir = math::unit_vector(ray.direction());
-    floating t = 0.5 * (unit_dir.y() + 1.0);
-    return (1.0 - t) * math::Vector3(1.0, 1.0, 1.0) + t * math::Vector3(0.5, 0.7, 1.0);
+    else
+    {
+        math::Vector3 unit_dir = math::unit_vector(ray.direction());
+        floating t = 0.5 * (unit_dir.y() + 1.0);
+        return (1.0 - t) * math::Vector3(1.0, 1.0, 1.0) + t * math::Vector3(0.5, 0.7, 1.0);
+    }
 }
 
 inline int colorFloatToInt(floating color)
@@ -54,10 +54,12 @@ int main()
         return 1;
     }
 
-    scene::Hitable *list[2];
-    list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5);
-    list[1] = new scene::Sphere(math::Vector3(0, -100.5, -1), 100);
-    scene::Hitable *world = new scene::World(list, 2);
+    scene::Hitable *list[4];
+    list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5, new mat::Lambertian(math::Vector3(0.8, 0.3, 0.3)));
+    list[1] = new scene::Sphere(math::Vector3(0, -100.5, -1), 100, new mat::Lambertian(math::Vector3(0.8, 0.8, 0.0)));
+    list[2] = new scene::Sphere(math::Vector3(1, 0, -1), 0.5, new mat::Metal(math::Vector3(0.8, 0.6, 0.2), 1.0));
+    list[3] = new scene::Sphere(math::Vector3(-1, 0, -1), 0.5, new mat::Metal(math::Vector3(0.8, 0.8, 0.8), 0.3));
+    scene::Hitable *world = new scene::World(list, 4);
 
     Camera camera;
 
@@ -73,7 +75,7 @@ int main()
                 floating v = ((floating)(y) + drand48()) / (floating)(height);
 
                 math::Ray ray = camera.getRay(u, v);
-                color += traceColor(ray, world);
+                color += traceColor(ray, world, 0);
             }
 
             color /= (floating) samples;

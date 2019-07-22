@@ -180,4 +180,11 @@ namespace math {
     {
         return v / v.length();
     }
+
+    inline Vector3 reflect(const Vector3& v, const Vector3& n)
+    {
+        return v - 2.0 * dot(v, n) * n;
+    }
+
+    Vector3 random_in_unit_sphere();
 }

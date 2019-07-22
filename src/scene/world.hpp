@@ -4,7 +4,6 @@
 
 namespace scene
 {
-
     class World : public Hitable
     {
     public:
