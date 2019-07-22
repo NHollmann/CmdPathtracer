@@ -5,6 +5,7 @@
 #include "types.hpp"
 #include "output/imageOutput.hpp"
 #include "output/ppmOutput.hpp"
+#include "math/vector3.hpp"
 
 inline int colorFloatToInt(floating color)
 {
@@ -27,15 +28,12 @@ int main()
     {
         for (int x = 0; x < width; x++)
         {
-            floating r = (floating)(x) / (floating)(width);
-            floating g = (floating)(y) / (floating)(height);
-            floating b = 0.2f;
+            math::Vector3 color((floating)(x) / (floating)(width), (floating)(y) / (floating)(height), 0.2);
 
-            int ir = colorFloatToInt(r);
-            int ig = colorFloatToInt(g);
-            int ib = colorFloatToInt(b);
-
-            imageOut->write(ir, ig, ib);
+            int r = colorFloatToInt(color.r());
+            int g = colorFloatToInt(color.g());
+            int b = colorFloatToInt(color.b());
+            imageOut->write(r, g, b);
         }
     }
 
