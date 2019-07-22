@@ -6,8 +6,22 @@
 #include "output/ppmOutput.hpp"
 #include "math/ray.hpp"
 
+bool hit_sphere(const math::Vector3& center, floating radius, const math::Ray& ray)
+{
+    math::Vector3 oc = ray.origin() - center;
+    floating a = math::dot(ray.direction(), ray.direction());
+    floating b = 2.0 * math::dot(oc, ray.direction());
+    floating c = math::dot(oc, oc) - radius * radius;
+    floating discriminant = b * b - 4 * a * c;
+    return (discriminant > 0);
+}
+
 math::Vector3 traceColor(const math::Ray& ray)
 {
+    if (hit_sphere(math::Vector3(0, 0, -1), 0.5, ray))
+    {
+        return math::Vector3(1, 0, 0);
+    }
     math::Vector3 unit_dir = math::unit_vector(ray.direction());
     floating t = 0.5 * (unit_dir.y() + 1.0);
     return (1.0 - t) * math::Vector3(1.0, 1.0, 1.0) + t * math::Vector3(0.5, 0.7, 1.0);
@@ -32,7 +46,7 @@ int main()
 
     math::Vector3 lower_left(-2.0, -1.0, -1.0);
     math::Vector3 horizontal(4.0, 0.0, 0.0);
-    math::Vector3 vertical(0.0, 2.0, -1.0);
+    math::Vector3 vertical(0.0, 2.0, 0.0);
     math::Vector3 origin(0.0, 0.0, 0.0);
 
     for (int y = height - 1; y >= 0; y--)
