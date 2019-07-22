@@ -3,9 +3,15 @@
 #include <iomanip>
 
 #include "types.hpp"
-#include "output/imageOutput.hpp"
 #include "output/ppmOutput.hpp"
-#include "math/vector3.hpp"
+#include "math/ray.hpp"
+
+math::Vector3 traceColor(const math::Ray& ray)
+{
+    math::Vector3 unit_dir = math::unit_vector(ray.direction());
+    floating t = 0.5 * (unit_dir.y() + 1.0);
+    return (1.0 - t) * math::Vector3(1.0, 1.0, 1.0) + t * math::Vector3(0.5, 0.7, 1.0);
+}
 
 inline int colorFloatToInt(floating color)
 {
@@ -14,8 +20,8 @@ inline int colorFloatToInt(floating color)
 
 int main()
 {
-    const int width = 200;
-    const int height = 100;
+    const int width = 400;
+    const int height = 200;
 
     output::ImageOutput *imageOut = new output::PpmOutput;
 
@@ -24,11 +30,21 @@ int main()
         return 1;
     }
 
+    math::Vector3 lower_left(-2.0, -1.0, -1.0);
+    math::Vector3 horizontal(4.0, 0.0, 0.0);
+    math::Vector3 vertical(0.0, 2.0, -1.0);
+    math::Vector3 origin(0.0, 0.0, 0.0);
+
     for (int y = height - 1; y >= 0; y--)
     {
         for (int x = 0; x < width; x++)
         {
-            math::Vector3 color((floating)(x) / (floating)(width), (floating)(y) / (floating)(height), 0.2);
+            floating u = (floating)(x) / (floating)(width);
+            floating v = (floating)(y) / (floating)(height);
+
+            math::Ray ray(origin, lower_left + u * horizontal + v * vertical);
+
+            math::Vector3 color = traceColor(ray);
 
             int r = colorFloatToInt(color.r());
             int g = colorFloatToInt(color.g());
