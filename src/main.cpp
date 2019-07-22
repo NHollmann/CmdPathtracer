@@ -2,7 +2,11 @@
 #include <fstream>
 #include <iomanip>
 
-inline int colorFloatToInt(float color)
+#include "types.hpp"
+#include "output/imageOutput.hpp"
+#include "output/ppmOutput.hpp"
+
+inline int colorFloatToInt(floating color)
 {
     return (int)(255.99f * color);
 }
@@ -12,36 +16,31 @@ int main()
     const int width = 200;
     const int height = 100;
 
-    std::ofstream outfile;
-    outfile.open("out.ppm", std::ios::out | std::ios::trunc | std::ios::binary);
+    output::ImageOutput *imageOut = new output::PpmOutput;
 
-    if (!outfile.is_open()) {
+    if (!imageOut->open("out.ppm", width, height)) {
         std::cerr << "Could not open out.ppm" << std::endl;
         return 1;
     }
-
-    outfile << "P3\n" << width << " " << height << "\n255\n";
 
     for (int y = height - 1; y >= 0; y--)
     {
         for (int x = 0; x < width; x++)
         {
-            float r = (float)(x) / (float)(width);
-            float g = (float)(y) / (float)(height);
-            float b = 0.2f;
+            floating r = (floating)(x) / (floating)(width);
+            floating g = (floating)(y) / (floating)(height);
+            floating b = 0.2f;
 
             int ir = colorFloatToInt(r);
             int ig = colorFloatToInt(g);
             int ib = colorFloatToInt(b);
 
-            outfile << std::setw(3) << ir << " ";
-            outfile << std::setw(3) << ig << " ";
-            outfile << std::setw(3) << ib << " ";
+            imageOut->write(ir, ig, ib);
         }
-        outfile << "\n";
     }
 
-    outfile.close();
+    imageOut->close();
+    delete imageOut;
 
     return 0;
 }
