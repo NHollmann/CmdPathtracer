@@ -9,13 +9,26 @@
 #include "scene/sphere.hpp"
 #include "camera.hpp"
 
+// TODO move into math namespace
+math::Vector3 random_in_unit_sphere()
+{
+    math::Vector3 point;
+
+    do {
+        point = 2.0 * math::Vector3(drand48(), drand48(), drand48()) - math::Vector3(1, 1, 1);
+    } while (point.squared_length() >= 1.0);
+
+    return point;
+}
+
 math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world)
 {
     scene::HitRecord rec;
 
-    if (world->hit(ray, 0.0, MAX_FLOATING, rec))
+    if (world->hit(ray, 0.001, MAX_FLOATING, rec))
     {
-        return 0.5 * math::Vector3(rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0);
+        math::Vector3 target = rec.point + rec.normal + random_in_unit_sphere();
+        return 0.5 * traceColor(math::Ray(rec.point, target - rec.point), world);
     }
 
     math::Vector3 unit_dir = math::unit_vector(ray.direction());
@@ -64,6 +77,7 @@ int main()
             }
 
             color /= (floating) samples;
+            color = math::Vector3(sqrt(color.r()), sqrt(color.g()), sqrt(color.b()));
 
             int r = colorFloatToInt(color.r());
             int g = colorFloatToInt(color.g());
