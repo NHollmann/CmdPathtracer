@@ -1,8 +1,8 @@
 #include "camera.hpp"
 
-Camera::Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, floating aspect)
+Camera::Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, floating aspect, floating aperture, floating focusDist)
 {
-    math::Vector3 u, v, w;
+    lensRadius = aperture / 2.0;
 
     floating theta = vfov * M_PI / 180;
     floating halfHeight = tan(theta / 2);
@@ -13,12 +13,14 @@ Camera::Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, 
     u = math::unit_vector(math::cross(vUp, w));
     v = math::cross(w, u);
 
-    lower_left_corner = origin - halfWidth * u - halfHeight * v - w;
-    horizontal = 2 * halfWidth * u;
-    vertical = 2 * halfHeight * v;;
+    lower_left_corner = origin - halfWidth * focusDist * u - halfHeight * focusDist * v - focusDist * w;
+    horizontal = 2 * halfWidth * focusDist * u;
+    vertical = 2 * halfHeight * focusDist * v;;
 }
 
-math::Ray Camera::getRay(float u, float v)
+math::Ray Camera::getRay(floating s, floating t)
 {
-    return math::Ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+    math::Vector3 rd = lensRadius * math::random_in_unit_disk();
+    math::Vector3 offset = u * rd.x() + v * rd.y();
+    return math::Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset);
 }

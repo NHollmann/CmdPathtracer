@@ -13,6 +13,17 @@ namespace math
         return point;
     }
 
+    Vector3 random_in_unit_disk()
+    {
+        Vector3 point;
+
+        do {
+            point = 2.0 * Vector3(drand48(), drand48(), 0) - Vector3(1, 1, 0);
+        } while (dot(point, point) >= 1.0);
+
+        return point;
+    }
+
     bool refract(const Vector3& v, const Vector3& n, floating ni_over_nt, Vector3& refracted)
     {
         Vector3 unitV = unit_vector(v);
