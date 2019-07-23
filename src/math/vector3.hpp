@@ -186,5 +186,7 @@ namespace math {
         return v - 2.0 * dot(v, n) * n;
     }
 
+    bool refract(const Vector3& v, const Vector3& n, floating ni_over_nt, Vector3& refracted);
+
     Vector3 random_in_unit_sphere();
 }

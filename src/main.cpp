@@ -9,6 +9,7 @@
 #include "scene/sphere.hpp"
 #include "material/lambertian.hpp"
 #include "material/metal.hpp"
+#include "material/dielectric.hpp"
 #include "camera.hpp"
 
 math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world, int depth)
@@ -54,12 +55,13 @@ int main()
         return 1;
     }
 
-    scene::Hitable *list[4];
-    list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5, new mat::Lambertian(math::Vector3(0.8, 0.3, 0.3)));
+    scene::Hitable *list[5];
+    list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5, new mat::Lambertian(math::Vector3(0.1, 0.2, 0.5)));
     list[1] = new scene::Sphere(math::Vector3(0, -100.5, -1), 100, new mat::Lambertian(math::Vector3(0.8, 0.8, 0.0)));
-    list[2] = new scene::Sphere(math::Vector3(1, 0, -1), 0.5, new mat::Metal(math::Vector3(0.8, 0.6, 0.2), 1.0));
-    list[3] = new scene::Sphere(math::Vector3(-1, 0, -1), 0.5, new mat::Metal(math::Vector3(0.8, 0.8, 0.8), 0.3));
-    scene::Hitable *world = new scene::World(list, 4);
+    list[2] = new scene::Sphere(math::Vector3(1, 0, -1), 0.5, new mat::Metal(math::Vector3(0.8, 0.6, 0.2), 0.2));
+    list[3] = new scene::Sphere(math::Vector3(-1, 0, -1), 0.5, new mat::Dielectric(1.5));
+    list[4] = new scene::Sphere(math::Vector3(-1, 0, -1), -0.45, new mat::Dielectric(1.5));
+    scene::Hitable *world = new scene::World(list, 5);
 
     Camera camera;
 
