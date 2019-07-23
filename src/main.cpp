@@ -63,7 +63,12 @@ int main()
     list[4] = new scene::Sphere(math::Vector3(-1, 0, -1), -0.45, new mat::Dielectric(1.5));
     scene::Hitable *world = new scene::World(list, 5);
 
-    Camera camera;
+    Camera camera(
+        math::Vector3(-2, 2, 1), // LookFrom
+        math::Vector3(0, 0, -1), // LookAt
+        math::Vector3(0, 1, 0),  // Up
+        60, (floating)width / (floating) height
+    );
 
     for (int y = height - 1; y >= 0; y--)
     {

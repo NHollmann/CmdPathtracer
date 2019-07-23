@@ -5,7 +5,7 @@
 class Camera
 {
 public:
-    Camera();
+    Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, floating aspect);
     math::Ray getRay(float u, float v);
 
 private:
