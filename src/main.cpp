@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <chrono>
 
 #include "types.hpp"
+#include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
 #include "math/ray.hpp"
 #include "scene/world.hpp"
@@ -12,6 +14,8 @@
 #include "material/dielectric.hpp"
 #include "tracer/camera.hpp"
 #include "tracer/raytracer.hpp"
+
+#define REQUIRE_MIN(var, val) ((var) < (val) ? (val) : (var))
 
 inline int colorFloatToInt(floating color)
 {
@@ -56,18 +60,45 @@ scene::Hitable *randomScene()
     return new scene::World(list, i);
 }
 
-int main()
+output::ImageOutput* imageOutputFromString(std::string format)
 {
-    const int width = 200;
-    const int height = 100;
-    const int samples = 100;
+    if (format == "ppm") {
+        return new output::PpmOutput;
+    } else {
+        std::cerr << "Unknown fromat " << format << std::endl;
+    }
 
-    output::ImageOutput *imageOut = new output::PpmOutput;
+    exit(1);
+    return nullptr;
+}
 
-    if (!imageOut->open("out.ppm", width, height)) {
-        std::cerr << "Could not open out.ppm" << std::endl;
+int main(int argc, char* argv[])
+{
+    cli::RaytracerOptions options = cli::parseArguments(argc, argv);
+
+    const int width = REQUIRE_MIN(options.width, 10);
+    const int height = REQUIRE_MIN(options.height, 10);
+    const int samples = REQUIRE_MIN(options.samples, 1);
+    const int depth = REQUIRE_MIN(options.depth, 1);
+
+    output::ImageOutput *imageOut = imageOutputFromString(options.format);
+
+    std::cout << "Toy Raytracer by Nicolas Hollmann." << std::endl;
+    std::cout << "Output filename: " << options.filename << std::endl;
+    std::cout << "Output filetype: " << options.format << std::endl;
+    std::cout << "World:           " << options.world << std::endl;
+    std::cout << "Width:           " << width << std::endl;
+    std::cout << "Height:          " << height << std::endl;
+    std::cout << "Samples:         " << samples << std::endl;
+    std::cout << "Depth:           " << depth << std::endl;
+    std::cout << "Starting now!" << std::endl;
+
+    if (!imageOut->open(options.filename, width, height)) {
+        std::cerr << "Could not open " << options.filename << " for writing." << std::endl;
         return 1;
     }
+
+    std::chrono::high_resolution_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 
     /* scene::Hitable *list[5];
     list[0] = new scene::Sphere(math::Vector3(0, 0, -1), 0.5, new mat::Lambertian(math::Vector3(0.1, 0.2, 0.5)));
@@ -103,7 +134,7 @@ int main()
                 floating v = ((floating)(y) + drand48()) / (floating)(height);
 
                 math::Ray ray = camera.getRay(u, v);
-                color += tracer::traceColor(ray, world, 0);
+                color += tracer::traceColor(ray, world, depth);
             }
 
             color /= (floating) samples;
@@ -120,6 +151,10 @@ int main()
 
     imageOut->close();
     delete imageOut;
+
+    std::chrono::high_resolution_clock::time_point endTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsedSeconds = endTime - startTime;
+    std::cout << "Raytracer finished after " << elapsedSeconds.count() << " seconds." << std::endl;
 
     return 0;
 }

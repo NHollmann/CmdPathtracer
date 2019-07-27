@@ -31,3 +31,5 @@ file(GLOB_RECURSE src_files
 )
 
 add_executable(${PROJECT_NAME} ${src_files})
+
+target_include_directories(${PROJECT_NAME} PRIVATE "thirdParty")

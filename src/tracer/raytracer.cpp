@@ -11,9 +11,9 @@ namespace tracer
         {
             math::Ray scattered;
             math::Vector3 attenuation;
-            if (depth < 50 && rec.matPtr->scatter(ray, rec, attenuation, scattered))
+            if (depth > 0 && rec.matPtr->scatter(ray, rec, attenuation, scattered))
             {
-                return attenuation * traceColor(scattered, world, depth + 1);
+                return attenuation * traceColor(scattered, world, depth - 1);
             }
             else
             {
