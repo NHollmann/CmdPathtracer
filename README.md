@@ -6,6 +6,7 @@ The code follows the one from the book, but I've changed a lot of the code struc
 
 - [x] Runs from the command line with options
 - [x] PPM Output
+- [x] BMP Output
 - [x] Antialiasing
 - [x] Diffuse, Metal and Dielectric Materials
 - [x] Positionable camera
@@ -61,6 +62,5 @@ cmake -DDOUBLE_AS_FLOAT ..
 ## Todo
 Some features I like to add:
 - [ ] More worlds
-- [ ] BMP
 - [ ] TGA
 - [ ] Multithreading

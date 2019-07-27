@@ -6,17 +6,15 @@
 
 namespace output
 {
-    class PpmOutput : public ImageOutput
+    class BmpOutput : public ImageOutput
     {
     public:
         virtual bool open(std::string filename, int width, int height);
         virtual void write(int r, int g, int b) ;
         virtual void close();
-        virtual ~PpmOutput();
+        virtual ~BmpOutput();
 
     private:
         std::ofstream outfile;
-        long counter = 0;
-        int width;
     };
 }

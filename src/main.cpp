@@ -1,11 +1,10 @@
 #include <iostream>
-#include <fstream>
-#include <iomanip>
 #include <chrono>
 
 #include "types.hpp"
 #include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
+#include "output/bmpOutput.hpp"
 #include "tracer/raytracer.hpp"
 #include "material/materialPool.hpp"
 #include "world/world.hpp"
@@ -38,6 +37,10 @@ output::ImageOutput* imageOutputFromString(std::string format)
     if (format == "ppm") 
     {
         return new output::PpmOutput;
+    }
+    else if (format == "bmp") 
+    {
+        return new output::BmpOutput;
     } 
     else 
     {
