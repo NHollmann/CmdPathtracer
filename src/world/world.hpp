@@ -4,6 +4,7 @@
 #include "../scene/world.hpp"
 #include "../scene/sphere.hpp"
 #include "../tracer/camera.hpp"
+#include "../material/materialPool.hpp"
 #include "../material/lambertian.hpp"
 #include "../material/metal.hpp"
 #include "../material/dielectric.hpp"

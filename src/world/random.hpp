@@ -4,5 +4,5 @@
 
 namespace world
 {
-    WorldData* getRandomWorld(floating aspect);
+    WorldData* getRandomWorld(floating aspect, mat::MaterialPool& matPool);
 }

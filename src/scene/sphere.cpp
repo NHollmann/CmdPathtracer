@@ -2,12 +2,6 @@
 
 namespace scene
 {
-    Sphere::~Sphere()
-    {
-        // TODO Materialpool! 
-        delete material;
-    }
-
     bool Sphere::hit(const math::Ray& ray, floating tMin, floating tMax, HitRecord& rec) const
     {
         math::Vector3 oc = ray.origin() - center;

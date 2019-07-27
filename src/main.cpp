@@ -7,21 +7,22 @@
 #include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
 #include "tracer/raytracer.hpp"
+#include "material/materialPool.hpp"
 #include "world/world.hpp"
 #include "world/random.hpp"
 #include "world/demo.hpp"
 
 #define REQUIRE_MIN(var, val) ((var) < (val) ? (val) : (var))
 
-world::WorldData* worldFromString(std::string world, floating aspect)
+world::WorldData* worldFromString(std::string world, floating aspect, mat::MaterialPool& matPool)
 {
     if (world == "random") 
     {
-        return world::getRandomWorld(aspect);
+        return world::getRandomWorld(aspect, matPool);
     }
     else if (world == "demo")
     {
-        return world::getDemoWorld(aspect);
+        return world::getDemoWorld(aspect, matPool);
     } 
     else 
     {
@@ -40,7 +41,7 @@ output::ImageOutput* imageOutputFromString(std::string format)
     } 
     else 
     {
-        std::cerr << "Unknown fromat " << format << std::endl;
+        std::cerr << "Unknown format " << format << std::endl;
     }
 
     exit(1);
@@ -57,9 +58,11 @@ int main(int argc, char* argv[])
     const int depth = REQUIRE_MIN(options.depth, 1);
 
     const floating aspect = (floating) width / (floating) height;
+    
+    mat::MaterialPool matPool;
 
     output::ImageOutput *imageOut = imageOutputFromString(options.format);
-    world::WorldData *world = worldFromString(options.world, aspect);
+    world::WorldData *world = worldFromString(options.world, aspect, matPool);
 
     std::cout << "Toy Raytracer by Nicolas Hollmann." << std::endl;
     std::cout << "Output filename: " << options.filename << std::endl;
