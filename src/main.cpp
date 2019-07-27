@@ -6,20 +6,12 @@
 #include "types.hpp"
 #include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
-#include "math/ray.hpp"
-#include "scene/hitable.hpp"
-#include "tracer/camera.hpp"
 #include "tracer/raytracer.hpp"
 #include "world/world.hpp"
 #include "world/random.hpp"
 #include "world/demo.hpp"
 
 #define REQUIRE_MIN(var, val) ((var) < (val) ? (val) : (var))
-
-inline int colorFloatToInt(floating color)
-{
-    return (int)(255.99f * color);
-}
 
 world::WorldData* worldFromString(std::string world, floating aspect)
 {
