@@ -20,6 +20,7 @@ namespace scene
     class Hitable
     {
     public:
+        virtual ~Hitable() = default;
         virtual bool hit(const math::Ray& ray, floating tMin, floating tMay, HitRecord& rec) const = 0;
     };
 }

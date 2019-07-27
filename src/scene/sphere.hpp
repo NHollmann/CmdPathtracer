@@ -10,6 +10,7 @@ namespace scene
     public:
         Sphere() {}
         Sphere(math::Vector3 cen, floating r, mat::Material *mat) : center(cen), radius(r), material(mat) {}
+        virtual ~Sphere();
 
         virtual bool hit(const math::Ray& ray, floating tMin, floating tMax, HitRecord& rec) const;
 

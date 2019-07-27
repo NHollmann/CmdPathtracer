@@ -6,7 +6,7 @@ namespace tracer
     math::Vector3 traceColor(const math::Ray& ray, scene::Hitable *world, int depth)
     {
         scene::HitRecord rec;
-
+        
         if (world->hit(ray, 0.001, MAX_FLOATING, rec))
         {
             math::Ray scattered;

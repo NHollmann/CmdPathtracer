@@ -24,7 +24,7 @@ namespace cli
             ("d,depth", "Max ray depth", cxxopts::value<int>()->default_value("50"), "depth");
         
         options.add_options("Scene")
-            ("world", "The world to render", cxxopts::value<std::string>()->default_value("cover"), "world");
+            ("world", "The world to render", cxxopts::value<std::string>()->default_value("random"), "world");
 
         try {
             auto result = options.parse(argc, argv);
