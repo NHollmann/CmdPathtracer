@@ -65,6 +65,8 @@ namespace world
             aperture, distToFocus
         );
 
-        return new WorldData(camera, randomScene(matPool));
+        sky::Sky* sky = new sky::GradientSky(math::Vector3(0.5, 0.7, 1.0), math::Vector3(1.0, 1.0, 1.0));
+
+        return new WorldData(camera, randomScene(matPool), sky);
     }
 }

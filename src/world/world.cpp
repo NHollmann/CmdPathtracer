@@ -6,6 +6,7 @@ namespace world
     {
         delete camera;
         delete world;
+        delete sky;
     }
 
     tracer::Camera* WorldData::getCamera()
@@ -16,5 +17,10 @@ namespace world
     scene::Hitable* WorldData::getWorld()
     {
         return world;
+    }
+
+    sky::Sky* WorldData::getSky()
+    {
+        return sky;
     }
 }

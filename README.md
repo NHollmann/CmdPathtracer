@@ -60,7 +60,6 @@ cmake -DDOUBLE_AS_FLOAT ..
 
 ## Todo
 Some features I like to add:
-- [ ] Sky class for different environments
 - [ ] More worlds
 - [ ] BMP
 - [ ] TGA
