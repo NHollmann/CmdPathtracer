@@ -8,6 +8,7 @@ namespace mat
     {
     public:
         Metal(const math::Vector3& a, floating f) : albedo(a) { if (f < 1) fuzz = f; else fuzz = 1; }
+        virtual ~Metal() = default;
 
         virtual bool scatter(const math::Ray& rayIn, const scene::HitRecord& rec, math::Vector3& attenuation, math::Ray& scattered) const;
     

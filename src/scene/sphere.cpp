@@ -4,7 +4,8 @@ namespace scene
 {
     Sphere::~Sphere()
     {
-        // TODO delete Material! (Materialpool?)
+        // TODO Materialpool! 
+        delete material;
     }
 
     bool Sphere::hit(const math::Ray& ray, floating tMin, floating tMax, HitRecord& rec) const
