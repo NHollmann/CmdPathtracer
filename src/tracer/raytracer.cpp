@@ -2,6 +2,8 @@
 #include "../material/material.hpp"
 
 #include <thread>
+#include <atomic>
+#include <vector>
 
 namespace tracer
 {
@@ -38,30 +40,65 @@ namespace tracer
         }
     }
 
-    void raytraceMultithreaded(output::ImageOutput* imageOut, world::WorldData* world, int width, int height, int samples, int depth)
+    void raytraceMultithreaded(output::BufferedOutput& buffer, world::WorldData* world, int width, int height, int samples, int depth, int threadCount, int blockSize)
     {
-        for (int y = height - 1; y >= 0; y--)
+        std::atomic_int count(0);
+        std::vector<std::thread> threadPool;
+        threadPool.reserve(threadCount);
+        uint8_t* dataBuffer = buffer.getData();
+        const int blockCountH = 1 + ((width - 1) / blockSize);
+        const int blockCountV = 1 + ((height - 1) / blockSize);
+        const int blockMax = blockCountH * blockCountV;
+
+        for (int i = 0; i < threadCount; i++)
         {
-            for (int x = 0; x < width; x++)
-            {
-                math::Vector3 color(0, 0, 0);
-
-                for (int sample = 0; sample < samples; sample++)
+            threadPool.emplace_back([=, &count](){
+                while (true)
                 {
-                    floating u = ((floating)(x) + drand48()) / (floating)(width);
-                    floating v = ((floating)(y) + drand48()) / (floating)(height);
+                    const int index = count++;
+                    if (index >= blockMax)
+                    {
+                        break;
+                    }
 
-                    math::Ray ray = world->getCamera()->getRay(u, v);
-                    color += tracer::traceColor(ray, world->getWorld(), world->getSky(), depth);
+                    const int xStart = (index % blockCountH) * blockSize;
+                    const int yStart = (index / blockCountH) * blockSize;
+                    const int xEnd = std::min(width, xStart + blockSize);
+                    const int yEnd = std::min(height, yStart + blockSize);
+
+                    for (int y = yStart; y < yEnd; y++)
+                    {
+                        for (int x = xStart; x < xEnd; x++)
+                        {
+                            math::Vector3 color(0, 0, 0);
+
+                            for (int sample = 0; sample < samples; sample++)
+                            {
+                                floating u = ((floating)(x) + drand48()) / (floating)(width);
+                                floating v = ((floating)(y) + drand48()) / (floating)(height);
+
+                                math::Ray ray = world->getCamera()->getRay(u, v);
+                                color += tracer::traceColor(ray, world->getWorld(), world->getSky(), depth);
+                            }
+
+                            color /= (floating) samples;
+                            color = math::Vector3(sqrt(color.r()), sqrt(color.g()), sqrt(color.b()));
+
+                            int idx = (((height - 1) - y) * width + x) * 3;
+                            dataBuffer[idx + 0] = colorFloatToInt(color.r());
+                            dataBuffer[idx + 1] = colorFloatToInt(color.g());
+                            dataBuffer[idx + 2] = colorFloatToInt(color.b());
+                        }
+                    }
                 }
+            });
+        }
 
-                color /= (floating) samples;
-                color = math::Vector3(sqrt(color.r()), sqrt(color.g()), sqrt(color.b()));
-
-                int r = colorFloatToInt(color.r());
-                int g = colorFloatToInt(color.g());
-                int b = colorFloatToInt(color.b());
-                imageOut->write(r, g, b);
+        for (auto& thread : threadPool)
+        {
+            if (thread.joinable())
+            {
+                thread.join();
             }
         }
     }

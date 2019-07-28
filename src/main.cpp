@@ -105,7 +105,9 @@ int main(int argc, char* argv[])
     
     if (options.multithreading)
     {
-        tracer::raytraceMultithreaded(imageOut, world, width, height, samples, depth);
+        output::BufferedOutput bufferedOut(width, height);
+        tracer::raytraceMultithreaded(bufferedOut, world, width, height, samples, depth, threadCount, blockSize);
+        bufferedOut.writeTo(imageOut);
     }
     else
     {

@@ -5,40 +5,26 @@
 
 namespace output
 {
-    bool BufferedOutput::open(std::string filename, int width, int height)
+    BufferedOutput::BufferedOutput(int width, int height)
     {
-        data = new uint8_t[width * height * 3];
-
-        this->width = width;
-        outfile.open(filename.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
-
-        if (outfile.is_open())
-        {
-            outfile << "P3\n" << width << " " << height << "\n255\n";
-        }
-
-        return outfile.is_open();
-    }
-
-    void BufferedOutput::write(int r, int g, int b)
-    {
-        outfile << std::setw(3) << r << " ";
-        outfile << std::setw(3) << g << " ";
-        outfile << std::setw(3) << b << " ";
-
-        counter++;
-        if (counter % width == 0) {
-            outfile << "\n";
-        }
-    }
-
-    void BufferedOutput::close()
-    {
-        outfile.close();
+        size = width * height * 3;
+        data = new uint8_t[size];
     }
 
     BufferedOutput::~BufferedOutput() 
     {
         delete[] data;
+    }
+
+    void BufferedOutput::writeTo(ImageOutput *output)
+    {
+        for (size_t i = 0; i < size; i += 3) {
+            output->write(data[i], data[i + 1], data[i + 2]);
+        }
+    }
+
+    uint8_t* BufferedOutput::getData()
+    {
+        return data;
     }
 }
