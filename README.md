@@ -64,3 +64,4 @@ cmake -DDOUBLE_AS_FLOAT ..
 Some features I like to add:
 - [ ] More worlds
 - [ ] Multithreading
+- [ ] Make drand48 thread safe (maybe erand48?)

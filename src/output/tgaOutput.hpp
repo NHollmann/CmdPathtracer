@@ -16,7 +16,7 @@ namespace output
 
     private:
         uint8_t* data;
-        ulong counter;
+        uint64_t counter;
         int line;
         int width;
         std::ofstream outfile;

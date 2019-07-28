@@ -1,6 +1,8 @@
 #include "raytracer.hpp"
 #include "../material/material.hpp"
 
+#include <thread>
+
 namespace tracer
 {
     inline int colorFloatToInt(floating color)
