@@ -5,6 +5,7 @@ The code follows the one from the book, but I've changed a lot of the code struc
 ## Features
 
 - [x] Runs from the command line with options
+- [x] Multithreaded
 - [x] PPM Output
 - [x] BMP Output
 - [x] TGA Output
@@ -63,5 +64,4 @@ cmake -DDOUBLE_AS_FLOAT ..
 ## Todo
 Some features I like to add:
 - [ ] More worlds
-- [ ] Multithreading
 - [ ] Make drand48 thread safe (maybe erand48?)

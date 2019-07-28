@@ -14,6 +14,8 @@ typedef float floating;
 
 #define MAX_FLOATING (std::numeric_limits<floating>::max())
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 #ifdef WIN32
 inline double drand48()
 {

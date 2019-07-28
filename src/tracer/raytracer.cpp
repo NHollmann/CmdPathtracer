@@ -63,8 +63,8 @@ namespace tracer
 
                     const int xStart = (index % blockCountH) * blockSize;
                     const int yStart = (index / blockCountH) * blockSize;
-                    const int xEnd = std::min(width, xStart + blockSize);
-                    const int yEnd = std::min(height, yStart + blockSize);
+                    const int xEnd = MIN(width, xStart + blockSize);
+                    const int yEnd = MIN(height, yStart + blockSize);
 
                     for (int y = yStart; y < yEnd; y++)
                     {
