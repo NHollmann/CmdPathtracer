@@ -25,6 +25,8 @@ if (DOUBLE_AS_FLOAT)
 	add_definitions(-DDOUBLE_AS_FLOAT)
 endif()
 
+find_package(Threads REQUIRED)
+
 file(GLOB_RECURSE src_files
 	"src/*.hpp"
 	"src/*.cpp"
@@ -33,3 +35,4 @@ file(GLOB_RECURSE src_files
 add_executable(${PROJECT_NAME} ${src_files})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "thirdParty")
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})

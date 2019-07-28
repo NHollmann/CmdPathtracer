@@ -23,6 +23,11 @@ namespace cli
             ("s,samples", "Samples per pixel", cxxopts::value<int>()->default_value("100"), "samples")
             ("d,depth", "Max ray depth", cxxopts::value<int>()->default_value("50"), "depth");
         
+        options.add_options("Multithreading")
+            ("p,parallel", "Enables multithreading")
+            ("t,threads", "Sets the thread count, 0 for auto", cxxopts::value<unsigned int>()->default_value("0"), "threads")
+            ("blocksize", "Sets the size of a thread block", cxxopts::value<unsigned int>()->default_value("16"), "size");
+        
         options.add_options("Scene")
             ("world", "The world to render", cxxopts::value<std::string>()->default_value("random"), "world");
 
@@ -42,6 +47,10 @@ namespace cli
 
             raytracerOptions.filename = result["output"].as<std::string>();
             raytracerOptions.format = result["format"].as<std::string>();
+
+            raytracerOptions.multithreading = result.count("parallel") != 0;
+            raytracerOptions.threadCount = result["threads"].as<unsigned int>();
+            raytracerOptions.blockSize = result["blocksize"].as<unsigned int>();
 
             raytracerOptions.world = result["world"].as<std::string>();
         } 

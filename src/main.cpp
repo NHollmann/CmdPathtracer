@@ -1,11 +1,13 @@
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include "types.hpp"
 #include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
 #include "output/bmpOutput.hpp"
 #include "output/tgaOutput.hpp"
+#include "output/bufferedOutput.hpp"
 #include "tracer/raytracer.hpp"
 #include "material/materialPool.hpp"
 #include "world/world.hpp"
@@ -64,6 +66,8 @@ int main(int argc, char* argv[])
     const int height = REQUIRE_MIN(options.height, 10);
     const int samples = REQUIRE_MIN(options.samples, 1);
     const int depth = REQUIRE_MIN(options.depth, 1);
+    const int threadCount = options.threadCount == 0 ? std::thread::hardware_concurrency() : options.threadCount;
+    const int blockSize = REQUIRE_MIN(options.blockSize, 2);
 
     const floating aspect = (floating) width / (floating) height;
     
@@ -73,6 +77,7 @@ int main(int argc, char* argv[])
     world::WorldData *world = worldFromString(options.world, aspect, matPool);
 
     std::cout << "Toy Raytracer by Nicolas Hollmann." << std::endl;
+    std::cout << "== CONFIG ========================" << std::endl;
     std::cout << "Output filename: " << options.filename << std::endl;
     std::cout << "Output filetype: " << options.format << std::endl;
     std::cout << "World:           " << options.world << std::endl;
@@ -80,7 +85,16 @@ int main(int argc, char* argv[])
     std::cout << "Height:          " << height << std::endl;
     std::cout << "Samples:         " << samples << std::endl;
     std::cout << "Depth:           " << depth << std::endl;
-    std::cout << "Starting now!" << std::endl;
+    std::cout << "Multithreading:  " << (options.multithreading ? "YES" : "NO") << std::endl;
+
+    if (options.multithreading)
+    {
+        std::cout << "Thread count:    " << threadCount << std::endl;
+        std::cout << "Block size:      " << blockSize << std::endl;
+    }
+
+    std::cout << "==================================" << std::endl;
+    std::cout << "Starting NOW!" << std::endl;
 
     if (!imageOut->open(options.filename, width, height)) {
         std::cerr << "Could not open " << options.filename << " for writing." << std::endl;
@@ -89,7 +103,14 @@ int main(int argc, char* argv[])
 
     std::chrono::high_resolution_clock::time_point startTime = std::chrono::high_resolution_clock::now();
     
-    tracer::raytraceSimple(imageOut, world, width, height, samples, depth);
+    if (options.multithreading)
+    {
+        tracer::raytraceMultithreaded(imageOut, world, width, height, samples, depth);
+    }
+    else
+    {
+        tracer::raytraceSimple(imageOut, world, width, height, samples, depth);
+    }
 
     imageOut->close();
     delete imageOut;

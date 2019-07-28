@@ -13,6 +13,9 @@ namespace cli
         std::string filename;
         std::string format;
         std::string world;
+        bool multithreading;
+        int threadCount;
+        int blockSize;
     };
 
     RaytracerOptions parseArguments(int argc, char *argv[]);
