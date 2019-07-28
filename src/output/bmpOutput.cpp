@@ -26,7 +26,7 @@ namespace output
             };
 
             int32_t bmpW =  width;
-            int32_t bmpH = -height; // negative becuase this is a top-down bmp
+            int32_t bmpH = -height; // negative because this is a top-down bmp
 
             uint8_t infoHeader[] = {
                 0x28, 0x00, 0x00, 0x00, // Size of this header

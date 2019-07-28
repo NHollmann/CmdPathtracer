@@ -5,6 +5,7 @@
 #include "cli/argparse.hpp"
 #include "output/ppmOutput.hpp"
 #include "output/bmpOutput.hpp"
+#include "output/tgaOutput.hpp"
 #include "tracer/raytracer.hpp"
 #include "material/materialPool.hpp"
 #include "world/world.hpp"
@@ -41,7 +42,11 @@ output::ImageOutput* imageOutputFromString(std::string format)
     else if (format == "bmp") 
     {
         return new output::BmpOutput;
-    } 
+    }
+    else if (format == "tga") 
+    {
+        return new output::TgaOutput;
+    }
     else 
     {
         std::cerr << "Unknown format " << format << std::endl;
