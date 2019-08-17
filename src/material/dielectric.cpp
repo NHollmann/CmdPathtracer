@@ -46,11 +46,11 @@ namespace mat
         if (drand48() < reflectProb)
         {
             math::Vector3 reflected = math::reflect(rayIn.direction(), rec.normal);
-            scattered = math::Ray(rec.point, reflected);
+            scattered = math::Ray(rec.point, reflected, rayIn.time());
         }
         else
         {
-            scattered = math::Ray(rec.point, refracted);
+            scattered = math::Ray(rec.point, refracted, rayIn.time());
         }
         
         

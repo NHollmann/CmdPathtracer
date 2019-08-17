@@ -7,7 +7,8 @@ namespace tracer
     class Camera
     {
     public:
-        Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, floating aspect, floating aperture, floating focusDist);
+        Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, 
+                floating aspect, floating aperture, floating focusDist, floating t0, floating t1);
         math::Ray getRay(floating s, floating t);
 
     private:
@@ -17,5 +18,6 @@ namespace tracer
         math::Vector3 vertical;
         math::Vector3 u, v, w;
         floating lensRadius;
+        floating time0, time1;
     };
 }

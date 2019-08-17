@@ -2,9 +2,12 @@
 
 namespace tracer
 {
-    Camera::Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, floating aspect, floating aperture, floating focusDist)
+    Camera::Camera(math::Vector3 lookFrom, math::Vector3 lookAt, math::Vector3 vUp, floating vfov, 
+                floating aspect, floating aperture, floating focusDist, floating t0, floating t1)
     {
         lensRadius = aperture / 2.0;
+        time0 = t0;
+        time1 = t1;
 
         floating theta = vfov * M_PI / 180;
         floating halfHeight = tan(theta / 2);
@@ -24,6 +27,7 @@ namespace tracer
     {
         math::Vector3 rd = lensRadius * math::random_in_unit_disk();
         math::Vector3 offset = u * rd.x() + v * rd.y();
-        return math::Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset);
+        floating time = time0 + drand48() * (time1 - time0);
+        return math::Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset, time);
     }
 }

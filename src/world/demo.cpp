@@ -32,7 +32,8 @@ namespace world
             lookAt,
             math::Vector3(0, 1, 0),
             50, aspect,
-            aperture, distToFocus
+            aperture, distToFocus, 
+            0.0, 1.0
         );
 
         sky::Sky* sky = new sky::GradientSky(math::Vector3(0.5, 0.7, 1.0), math::Vector3(1.0, 1.0, 1.0));

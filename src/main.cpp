@@ -12,6 +12,7 @@
 #include "material/materialPool.hpp"
 #include "world/world.hpp"
 #include "world/random.hpp"
+#include "world/randomMotion.hpp"
 #include "world/demo.hpp"
 
 #define REQUIRE_MIN(var, val) ((var) < (val) ? (val) : (var))
@@ -25,6 +26,10 @@ world::WorldData* worldFromString(std::string world, floating aspect, mat::Mater
     else if (world == "demo")
     {
         return world::getDemoWorld(aspect, matPool);
+    }
+    else if (world == "randomMotion")
+    {
+        return world::getRandomMotionWorld(aspect, matPool);
     } 
     else 
     {

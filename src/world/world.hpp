@@ -3,6 +3,7 @@
 #include "../types.hpp"
 #include "../scene/world.hpp"
 #include "../scene/sphere.hpp"
+#include "../scene/movingSphere.hpp"
 #include "../tracer/camera.hpp"
 #include "../material/materialPool.hpp"
 #include "../material/lambertian.hpp"

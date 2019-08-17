@@ -1,4 +1,4 @@
-# CmdPathtracer
+# Pathtracer
 *A simple pathtracer running from the commandline for Linux, macOS and Windows*
 
 This is strongly based on the book [Ray Tracing in a Weekend](http://in1weekend.blogspot.com/2016/01/ray-tracing-in-one-weekend.html) by Peter Shirley.
@@ -15,6 +15,7 @@ The code follows the one from the book, but I've changed a lot of the code struc
 - [x] Diffuse, Metal and Dielectric Materials
 - [x] Positionable camera
 - [x] Defocus blur
+- [x] Motion blur
 
 ## Running
 The usage is relly simple. For a complete overview of all options, enter `./raytracer --help`. Here are some examples:

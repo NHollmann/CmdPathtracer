@@ -1,4 +1,4 @@
-#include "random.hpp"
+#include "randomMotion.hpp"
 
 namespace world
 {
@@ -33,7 +33,7 @@ namespace world
                         mat = matPool(new mat::Dielectric(1.5));
                     }
 
-                    list[i++] = new scene::Sphere(center, 0.2, mat);
+                    list[i++] = new scene::MovingSphere(center, center + math::Vector3(0, 0.5 * drand48(), 0), 0.0, 1.0, 0.2, mat);
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace world
         return new scene::World(list, i);
     }
 
-    WorldData* getRandomWorld(floating aspect, mat::MaterialPool& matPool)
+    WorldData* getRandomMotionWorld(floating aspect, mat::MaterialPool& matPool)
     {
         math::Vector3 lookFrom(13, 2, 3);
         math::Vector3 lookAt(0, 0, 0);
